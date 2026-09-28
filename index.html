@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="常用汉字识字卡片，点字听读音，支持语音播报、搜索、听音选字练习。">
+<meta name="theme-color" content="#c8452f">
+<title>识字小站 · 常用汉字跟读</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23c8452f'/><text y='72' x='50' text-anchor='middle' font-size='64' fill='%23fff' font-family='serif'>字</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">字</span>
+    <div class="brand-text">
+      <h1>识字小站</h1>
+      <p>点一点汉字，就能听到它怎么读</p>
+    </div>
+  </div>
+
+  <div class="topbar-tools">
+    <label class="tool">
+      <span>音色</span>
+      <select id="voiceSelect" aria-label="选择发音人"></select>
+    </label>
+    <label class="tool">
+      <span>语速 <b id="rateValue">0.8×</b></span>
+      <input id="rateRange" type="range" min="0.4" max="1.4" step="0.1" value="0.8" aria-label="调整语速">
+    </label>
+    <button id="themeBtn" class="ghost-btn" type="button" title="切换日间/夜间模式">🌙 夜间</button>
+    <button id="quizBtn" class="primary-btn" type="button">🎯 听音选字</button>
+  </div>
+</header>
+
+<div id="voiceWarn" class="voice-warn" hidden>
+  ⚠️ 当前浏览器没有检测到中文语音包，朗读功能可能不可用。建议使用 <b>Chrome / Edge</b>，或在系统的“语音/讲述人”设置里安装中文语音。
+</div>
+
+<main>
+  <section class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input id="searchInput" type="search" placeholder="搜索汉字、拼音或词语，例如：shui / 水 / 水果" autocomplete="off" aria-label="搜索汉字">
+      <button id="clearSearch" class="clear-btn" type="button" hidden aria-label="清空搜索">✕</button>
+    </div>
+    <div class="toolbar-actions">
+      <button id="playAllBtn" class="primary-btn" type="button">▶ 连续朗读本页</button>
+      <button id="stopBtn" class="ghost-btn" type="button" disabled>⏹ 停止</button>
+    </div>
+  </section>
+
+  <nav id="categoryNav" class="chips" aria-label="字表分类"></nav>
+
+  <p id="statusLine" class="status-line"></p>
+
+  <section id="grid" class="grid" aria-live="polite"></section>
+  <p id="emptyTip" class="empty-tip" hidden>没有找到这个字，换个词试试吧～</p>
+</main>
+
+<footer class="foot">
+  <p>共收录 <b>350+</b> 个日常高频汉字 · 语音由浏览器内置语音合成提供（Web Speech API）· 数据仅供参考，多音字读音以词语为准。</p>
+</footer>
+
+<!-- 汉字详情 -->
+<div id="detailMask" class="mask" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="detailChar">
+    <button id="detailClose" class="close-btn" type="button" aria-label="关闭">✕</button>
+    <div class="sheet-head">
+      <div id="detailChar" class="big-char">字</div>
+      <div class="sheet-head-info">
+        <p id="detailPinyin" class="pinyin">zì</p>
+        <p id="detailMeaning" class="meaning">意思</p>
+        <p id="detailTag" class="tag">分类</p>
+      </div>
+    </div>
+
+    <button id="detailSpeak" class="speak-main" type="button">🔊 朗读这个字</button>
+
+    <h3 class="sub-title">读一读词语</h3>
+    <div id="detailWords" class="word-list"></div>
+
+    <div class="sheet-nav">
+      <button id="prevChar" class="ghost-btn" type="button">← 上一个</button>
+      <button id="nextChar" class="ghost-btn" type="button">下一个 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 听音选字 -->
+<div id="quizMask" class="mask" hidden>
+  <div class="sheet quiz-sheet" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+    <button id="quizClose" class="close-btn" type="button" aria-label="关闭">✕</button>
+    <h2 id="quizTitle" class="sub-title center">🎯 听音选字</h2>
+    <p class="quiz-hint">听一听，选出你听到的那个字</p>
+
+    <button id="quizPlay" class="speak-main" type="button">🔊 再听一遍</button>
+
+    <div id="quizOptions" class="quiz-options"></div>
+    <p id="quizFeedback" class="quiz-feedback"></p>
+
+    <div class="quiz-foot">
+      <span>得分：<b id="quizScore">0</b> / <b id="quizTotal">0</b></span>
+      <button id="quizNext" class="primary-btn" type="button">下一题 →</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
